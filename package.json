@@ -1,0 +1,34 @@
+{
+  "name": "ee-maf-map",
+  "version": "1.0.0",
+  "description": "map and graphs for maf16 page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "budo index.js --serve=bundle.js --live -d",
+    "build": "browserify index.js | uglifyjs -c -m > bundle.js"
+  },
+  "browserify": {
+    "transform": [
+      "envify",
+      "brfs"
+    ]
+  },
+  "author": "Colin Broderick",
+  "license": "ISC",
+  "dependencies": {
+    "lodash.groupby": "^4.4.0"
+  },
+  "devDependencies": {
+    "101": "^1.6.0",
+    "brfs": "^1.4.3",
+    "browserify": "^13.0.1",
+    "budo": "^8.2.2",
+    "envify": "^3.4.0",
+    "eslint": "^2.10.2",
+    "gulp": "^3.9.1",
+    "neat-csv": "^2.1.0",
+    "turf": "^2.0.2",
+    "uglifyjs": "^2.4.10"
+  }
+}

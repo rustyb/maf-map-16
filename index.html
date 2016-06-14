@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>SOR16 Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!--[if lte IE 11 ]>
+    <script>
+      // Send < IE9 users to browser page.
+      window.location = './browser.html';
+    </script>
+    <![endif]-->
+<!-- for IE 10 only fix -->
+<script type="text/javascript">
+   if (navigator.appName == 'Microsoft Internet Explorer')
+   {
+
+      window.location = './browser.html';
+
+   }
+</script>
+    
+    <link href='css/base.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        .marker-properties {
+    border-collapse: collapse;
+    font-size: 11px;
+    width: 100%;
+    overflow: auto;
+    border-bottom: 1px solid #ccc;
+    max-height: 189px;
+}
+.mapboxgl-popup-content {
+    
+    overflow: auto;
+}
+.over {overflow: auto;max-height: 200px;width: 300px;border-top: 5px solid #ccc;margin-top: 5px;}
+
+table.marker-properties td,table.marker-properties th {border:1px solid #ccc;padding: 5px;    word-wrap: break-word;
+    word-break: break-word;
+    min-width: 120px;}
+table.marker-properties th {text-align: left;}
+#menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+    .line {
+    margin-right: 5px;
+    padding: 3px 10px;
+    border-radius: 0;
+    margin-bottom: 3px;
+    }
+    .dot {
+    border-radius: 50%;
+    margin: 0 12px 0 5px;
+    display: inline-block !important;
+    padding:5px; 
+}
+.mapboxgl-popup-content { max-width:200px; }
+.legend {max-width: 400px;}
+.uppercase {text-transform: uppercase;}
+
+    </style>
+</head>
+<body class="unlimiter loading">
+<div id='legend' class='pin-topright z1 pad2y legend'>
+  <div class='pad1 fill-lighten3 radius small'>
+    <div class="pad2 contain">
+        <h3 class="block space-bottom1">Summer Outlook 2016</h3>
+        <div class="prose-big">
+            <p>Predicted import needs under severe conditions</p>
+        </div>
+    </div>
+    <div id="map-legend" class="pad2 contain"></div>
+  </div>
+</div>
+
+
+<div id='map'></div>
+<script type="text/javascript" src="bundle.js"></script>
+
+</body>
+</html>
