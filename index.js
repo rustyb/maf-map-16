@@ -13,8 +13,7 @@ var map = new mapboxgl.Map({
         container: 'map', // container id
         style: 'mapbox://styles/entsoe/ciolfu1af0095djknovvmez43', //stylesheet location
         center: [19.56,52.41], // starting position
-        zoom: 3, // starting zoom
-        hash: true,
+        zoom: 2, // starting zoom
         maxZoom: 3.42,
         minZoom: 2.5,
         attributionControl: false
@@ -33,6 +32,10 @@ var colours = [
       ["3", 'rgba(29,56,103,1)'],
       ["4", 'rgba(229,91,37,1)']
     ]
+
+
+
+// related to the functioning of the slider for showing the scenarios
 
 var legend = document.getElementById('map-legend');
 
@@ -54,44 +57,95 @@ cos.forEach(function(layer, i) {
 
 legend.appendChild(list);
 
+var maps = ['final_final_map'];
+
+
+var types = [['Base Case', 0], ['Sensitivity (1)', 0.3], ['Sensitivity (2)', 0.5]]
+
+var monthLabel = document.getElementById('month');
+
+var label = ['ENS_1', 'lole_1']
+
+function filterBy(type, index) {
+    // Clear the popup if displayed.
+    popup.remove();
+
+
+
+    var filters = [
+        "all",
+        ["has", "lole_" + (index+1)],
+        [">=", ("lole_" + (index+1)), types[index][1]],
+        [">=", ("ENS_" + (index+1)), types[index][1]]
+    ];
+
+    map.setFilter('polys-map', filters);
+
+    // Set the label to the month
+    monthLabel.textContent = types[index][0]
+    label = [("ENS_" + (index+1)), ("lole_" + (index+1))]
+}
+
+
 function initializeMap() {
   document.body.classList.remove('loading');
-  map.addSource("ee_countries", {
-      "type": "geojson",
-      "data": "./data/nc.geojson"
-  });
-
   
-    
-  //var colours = ['rgba(0,0,0,1)']
-
-  for(var i=0; i < colours.length; i++) {
-    var volt = i;
-    map.addLayer({
-      "id": "polys-"+volt,
-      "source": "ee_countries",
-      "type": "fill",
-      "interactive": true,
-      "filter": ["all", ["==", "$type", "Polygon"],["==", "colour", colours[i][0]]],
-      "paint": {
-        "fill-color": colours[i][1],
-        "fill-opacity": 0.5,
-        "fill-outline-color": colours[i][1]
-      }
+  
+      map.addSource('final-map', {
+        "type": "geojson",
+        "data": "./data/final_final_map.geojson"
     });
-  }
+
+    map.addLayer({
+    "id": "polys-map",
+    "source": 'final-map',
+    "type": "fill",
+    "interactive": true,
+    "filter": ["all", ["==", "$type", "Polygon"], ["has", 'ENS_1']],
+    "paint": {
+      "fill-color": "#6e599f",
+      "fill-opacity": 0.5,
+      "fill-outline-color": "#484896"
+    }
+  });
 
   map.addLayer({
-      "id": "route-hover",
-      "type": "fill",
-      "source": "ee_countries",
-      "layout": {},
-      "paint": {
-          "fill-color": "rgba(102,103,105,0.75)",
-          "fill-opacity": 1
-      },
-      "filter": ["==", "admin", ""]
-  });
+        'id': 'coutries',
+        'source': 'final-map',
+        'type': 'fill',
+        'filter': ['==', 'isState', true],
+        'paint': {
+            'fill-color': {
+                property: 'change',
+                stops: [
+                    [0, '#F2F12D'],
+                    [1.1, '#EED322'],
+                    [2.2, '#E6B71E']
+                ]
+            },
+            'fill-opacity': 0.75
+        }
+    }, 'waterway-label');
+    
+// Set filter to first month of the year +
+            // Magnitude rating. 0 = January
+            filterBy(1, 0);
+  // map.addLayer({
+  //     "id": "route-hover-"+maps[i],
+  //     "type": "fill",
+  //     "source": maps[i],
+  //     "layout": {},
+  //     "paint": {
+  //         "fill-color": "rgba(102,103,105,0.75)",
+  //         "fill-opacity": 1
+  //     },
+  //     "filter": ["==", "admin", ""]
+  // });
+  
+      
+  //var colours = ['rgba(0,0,0,1)']
+
+    
 }
 
 // When the user moves their mouse over the page, we look for features
@@ -106,25 +160,39 @@ var popup = new mapboxgl.Popup({
     closeOnClick: false
 });
 
+
+document.getElementById('slider').addEventListener('input', function(e) {
+            var month = parseInt(e.target.value, 10);
+            filterBy(1, month);
+            
+        });
+
+
+
+
 map.on("mousemove", function(e) {
   var features = map.queryRenderedFeatures(
-                  e.point, { layers: colours.map(function(colours, i) {
-                    return 'polys-' + i;
-                  }) 
+                  e.point, { layers: ['polys-map']
                 });
 
   // Change the cursor style as a UI indicator.
   map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
 
-  if (features.length) {
-      map.setFilter("route-hover", ["==", "admin", features[0].properties.admin]);
-      map.setPaintProperty('route-hover', 'fill-color', 'rgba(102,103,105,0.75)');
-  } else {
-      map.setFilter("route-hover", ["==", "admin", ""]);
-      popup.remove();
-      return;
+  // if (features.length) {
+  //     map.setFilter("route-hover", ["==", "admin", features[0].properties.admin]);
+  //     map.setPaintProperty('route-hover', 'fill-color', 'rgba(102,103,105,0.75)');
+  // } else {
+  //     map.setFilter("route-hover", ["==", "admin", ""]);
+  //     popup.remove();
+  //     return;
+  // }
+  if (!features.length) {
+    popup.remove()
+    return;
   }
-  
+
+
+
   var feature = features[0];
   var p = feature.properties;
   var popupContainer = document.createElement('div');
@@ -153,7 +221,7 @@ map.on("mousemove", function(e) {
   // Populate the popup and set its coordinates
   // based on the feature found.
   popup.setLngLat(map.unproject(e.point))
-      .setHTML(popupContainer.innerHTML)
+      .setHTML('<h3>'+p['name']+'</h3><strong>ENS: '+Math.round(p[label[0]]) +'</strong><br>'+'<strong>LOLE: '+p[label[1]].toFixed(1)+'</strong>')
       .addTo(map);
 
 });

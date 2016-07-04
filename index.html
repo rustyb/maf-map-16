@@ -22,8 +22,8 @@
 </script>
     
     <link href='css/base.css' rel='stylesheet' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -102,17 +102,25 @@ table.marker-properties th {text-align: left;}
 .legend {max-width: 400px;}
 .uppercase {text-transform: uppercase;}
 
+label {font-size: 20px; display: block;font-weight: bold;}
+label#month:before {content: "Scenario: ";}
+
     </style>
 </head>
 <body class="unlimiter loading">
 <div id='legend' class='pin-topright z1 pad2y legend'>
   <div class='pad1 fill-lighten3 radius small'>
     <div class="pad2 contain">
-        <h3 class="block space-bottom1">Summer Outlook 2016</h3>
+        <h3 class="block space-bottom1">Mid-term Adequacy Forecast 2016</h3>
         <div class="prose-big">
-            <p>Predicted import needs under severe conditions</p>
+            <p>The main outcomes of probabilistic modelling.</p>
         </div>
     </div>
+    <div class="pad2 contain">
+        <label id='month'></label>
+        <input id='slider' type='range' min='0' max='2' step='1' value='0' />
+    </div>
+     
     <div id="map-legend" class="pad2 contain"></div>
   </div>
 </div>
