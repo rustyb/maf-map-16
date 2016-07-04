@@ -5,7 +5,7 @@ var fs = require('fs'),
 	assign = require('101/assign')
 
 
-var files = ['final_map.json'];
+var files = ['demand.json'];
 
 for (var i = 0; i < files.length; i++) {
 	// data

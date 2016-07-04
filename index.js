@@ -86,6 +86,9 @@ function filterBy(type, index) {
     label = [("ENS_" + (index+1)), ("lole_" + (index+1))]
 }
 
+var monthLabel = document.getElementById('month');
+
+
 
 function initializeMap() {
   document.body.classList.remove('loading');
@@ -109,11 +112,19 @@ function initializeMap() {
     }
   });
 
+  map.addSource('change', {
+      "type": "geojson",
+      "data": "./data/final_demand.geojson"
+  });
+
   map.addLayer({
-        'id': 'coutries',
-        'source': 'final-map',
+        'id': 'countries',
+        'source': 'change',
         'type': 'fill',
-        'filter': ['==', 'isState', true],
+        'filter': ['has', 'change'],
+        'layout': {
+          'visibility': 'none'
+        },
         'paint': {
             'fill-color': {
                 property: 'change',
@@ -127,6 +138,20 @@ function initializeMap() {
         }
     }, 'waterway-label');
     
+    var toggelLayer = document.getElementById('toggle');
+    console.log(toggelLayer);
+toggelLayer.addEventListener('click', function() {
+    if (toggelLayer.className == 'button active') {
+      map.setLayoutProperty('countries', 'visibility', 'none');
+      map.setLayoutProperty('polys-map', 'visibility', 'visible');
+      toggelLayer.className = 'button'
+    } else {
+      map.setLayoutProperty('countries', 'visibility', 'visible');
+      map.setLayoutProperty('polys-map', 'visibility', 'none');
+      toggelLayer.className = 'button active'
+    }
+        
+    });
 // Set filter to first month of the year +
             // Magnitude rating. 0 = January
             filterBy(1, 0);
